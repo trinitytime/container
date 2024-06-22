@@ -45,5 +45,8 @@
     "clean": "rm -rf dist",
     "test": "bun test"
   },
-  "type": "module"
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  }
 }
