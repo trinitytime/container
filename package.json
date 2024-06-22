@@ -1,0 +1,49 @@
+{
+  "name": "@trinitytime/container",
+  "version": "1.0.0",
+  "author": "buwon <buwon@mai-world.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trinitytime/container.git"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.1",
+    "@tsconfig/bun": "^1.0.6",
+    "@types/bun": "^1.1.4",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.2"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.cts"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/trinitytime/container/issues"
+  },
+  "description": "Lightweight dependency injection container",
+  "homepage": "https://github.com/trinitytime/container",
+  "keywords": [
+    "typescript",
+    "dependency injection",
+    "dependency inversion",
+    "inversion of control",
+    "container",
+    "ioc",
+    "di",
+    "dic"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "prepack": "npm run build",
+    "prebuild": "npm run clean",
+    "build": "npm run build:code && npm run build:type",
+    "build:code": "bun build ./src/index.ts --outdir ./dist --target node",
+    "build:type": "tsup ./src/index.ts --dts-only",
+    "clean": "rm -rf dist",
+    "test": "bun test"
+  },
+  "type": "module"
+}

@@ -1,0 +1,6 @@
+.devcontainer/
+.vscode/
+__tests__/
+node_modules/
+biome.json
+bun.lockb

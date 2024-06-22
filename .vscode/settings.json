@@ -1,0 +1,26 @@
+{
+  "cSpell.words": [
+    "biomejs",
+    "buwon",
+    "Buysugar",
+    "elysia",
+    "Hono",
+    "neondb",
+    "nothrow",
+    "Nuxt",
+    "outfile",
+    "ovpn",
+    "ozsugar",
+    "Pinia",
+    "trinitytime",
+    "trpc",
+    "unmarshall",
+    "unoid",
+    "Vite"
+  ],
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  }
+}
