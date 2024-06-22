@@ -13,7 +13,7 @@
       // "skipFiles": [
       //   "<node_internals>/**"
       // ],
-      "args": ["test", "${file}"],
+      "args": ["${file}"],
       "cwd": "${workspaceFolder}",
       "env": {
         "NODE_ENV": "local"

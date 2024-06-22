@@ -1,89 +1,61 @@
-import { Bind } from './bind.ts'
-import type { Plugin, RegItem, Token } from './types.ts'
+import { ServiceMetaData } from './serviceMetaData.js'
+import type { Factory, ServiceIdentifier } from './types.ts'
 
-type Registry = Map<symbol, RegItem>
+type Registry = Map<ServiceIdentifier, ServiceMetaData<unknown>>
 
-function getItemValue<Dep>(item: RegItem<Dep> | undefined): Dep | undefined {
-  if (undefined === item) return undefined
-  if (!item.factory) return item.value
-  if (item.transient) return item.factory()
-  if (!item.value) {
-    item.value = item.factory()
-  }
-
-  return item.value
+export interface MetaDataOptions {
+  transient: boolean
 }
 
 export class Container {
-  private _registry: Registry = new Map<symbol, RegItem>()
-  private _snapshots: Registry[] = []
-  private _plugins: Plugin[] = []
 
-  bind<Dep = never>(token: Token<Dep>): Bind<Dep> {
-    if (this._registry.get(token.type)) throw new Error(`object can only bound once: ${token.type.toString()}`)
+  private serviceMap = new Map<ServiceIdentifier, ServiceMetaData<unknown>>()
+  private snapshots: Registry[] = []
 
-    const item = {}
+  bind<T = unknown>(identifier: ServiceIdentifier<T>, factory: Factory<T>): Container {
 
-    this._registry.set(token.type, item)
+    if (this.serviceMap.get(identifier)) throw new Error(`object can only bound once: ${identifier.toString()}`)
 
-    return new Bind<Dep>(item as RegItem<Dep>)
-  }
-
-  rebind<Dep = never>(token: Token<Dep>): Bind<Dep> {
-    return this.remove(token).bind<Dep>(token)
-  }
-
-  remove(token: Token<unknown>): Container {
-    if (undefined === this._registry.get(token.type)) throw new Error(`${token.type.toString()} was never bound`)
-
-    this._registry.delete(token.type)
+    this.serviceMap.set(identifier, new ServiceMetaData(factory))
 
     return this
   }
 
-  get<Dep>(token: Token<Dep>, tags?: symbol[] | symbol, target?: unknown): Dep
-  get<Dep>(token: Token<Dep>, tags: symbol[] | symbol, target: unknown): Dep
-  get<Dep>(token: Token<Dep>, tags: symbol[] | symbol = [], target?: unknown): Dep {
-    const item = <RegItem<Dep> | undefined>this._registry.get(token.type)
+  remove(identifier: ServiceIdentifier): Container {
+    this.serviceMap.delete(identifier)
 
-    const value = getItemValue<Dep>(item)
-
-    if (undefined === value) throw new Error(`nothing bound to ${token.type.toString()}`)
-
-    return value
-
-    // if (!item || (!item.factory && undefined === item.value))
-    //   throw new Error(`nothing bound to ${token.type.toString()}`)
-
-    // const value: Dep = item.factory
-    //   ? !item.singleton
-    //     ? item.factory()
-    //     : (item.cache = item.cache || item.factory())
-    //   : item.value! // eslint-disable-line
-
-    // const tagsArr = valueOrArrayToArray(tags)
-
-    // if (tagsArr.indexOf(NOPLUGINS) === -1) {
-    //   for (const plugin of item.plugins.concat(this._plugins)) {
-    //     plugin(value, target, tagsArr, token, this)
-    //   }
-    // }
-
-    // return value
+    return this
   }
 
-  addPlugin(plugin: Plugin): Container {
-    this._plugins.push(plugin)
+  rebind<T = unknown>(identifier: ServiceIdentifier<T>, factory: Factory<T>): Container {
+    return this.remove(identifier).bind(identifier, factory)
+  }
+
+
+  get<T = unknown>(identifier: ServiceIdentifier<T>): T {
+    const metaData: ServiceMetaData<T> = this.serviceMap.get(identifier) as ServiceMetaData<T>
+
+    if (!metaData) throw new Error(`nothing bound to ${identifier.toString()}`)
+
+    return metaData.getValue()
+  }
+
+  meta(identifier: ServiceIdentifier, options: Partial<MetaDataOptions>): Container {
+    const metaData = this.serviceMap.get(identifier)
+    if (metaData) {
+      if (undefined !== options.transient) metaData.transient = options.transient
+    }
+
     return this
   }
 
   snapshot(): Container {
-    this._snapshots.push(new Map(this._registry))
+    this.snapshots.push(new Map(this.serviceMap))
     return this
   }
 
   restore(): Container {
-    this._registry = this._snapshots.pop() || this._registry
+    this.serviceMap = this.snapshots.pop() || this.serviceMap
     return this
   }
 }

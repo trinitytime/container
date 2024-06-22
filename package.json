@@ -1,10 +1,10 @@
 {
-  "name": "@trinitytime/dic",
+  "name": "@trinitytime/container",
   "version": "1.0.0",
   "author": "buwon <buwon@mai-world.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trinitytime/dic.git"
+    "url": "git+https://github.com/trinitytime/container.git"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.1",
@@ -20,7 +20,7 @@
     }
   },
   "bugs": {
-    "url": "https://github.com/trinitytime/dic/issues"
+    "url": "https://github.com/trinitytime/container/issues"
   },
   "description": "Lightweight dependency injection container",
   "files": [
@@ -31,12 +31,13 @@
     "!/**/*.test.ts",
     "!/**/*.test.d.ts"
   ],
-  "homepage": "https://github.com/trinitytime/dic",
+  "homepage": "https://github.com/trinitytime/container",
   "keywords": [
     "typescript",
     "dependency injection",
     "dependency inversion",
     "inversion of control",
+    "container",
     "ioc",
     "di",
     "dic"
