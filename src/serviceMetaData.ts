@@ -1,7 +1,6 @@
-import type { Factory } from "./types.ts"
+import type { Factory } from './types.ts'
 
 export class ServiceMetaData<T> {
-
   factory: Factory<T>
   value?: T
   transient?: boolean
@@ -10,7 +9,7 @@ export class ServiceMetaData<T> {
     this.factory = factory
   }
 
-  getValue(): T { 
+  getValue(): T {
     if (this.transient) return this.factory() as T
 
     if (undefined === this.value) {
@@ -19,5 +18,4 @@ export class ServiceMetaData<T> {
 
     return this.value
   }
-
 }
