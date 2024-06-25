@@ -40,11 +40,13 @@ Keys used for binding can be classes, functions, symbols, or strings.
 
 ```ts
 const ServiceKey = () => new Service()
+const ServiceToken = token('ServiceToken')
 
 container.bind<ServiceInterface>(Service, () => new Service())
 container.bind<ServiceInterface>(ServiceKey, () => new Service())
 container.bind<ServiceInterface>(Symbol.for('Service'), () => new Service())
 container.bind<ServiceInterface>('Service', () => new Service())
+container.bind<ServiceInterface>(ServiceToken, () => new Service())
 ```
 
 #### Binding a class
